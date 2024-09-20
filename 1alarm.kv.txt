@@ -1,0 +1,77 @@
+ScreenManager:
+    MainScreen:
+    AlarmScreen:
+
+
+<MainScreen>:
+    name: "home"
+    BoxLayout:
+        orientation: 'vertical'
+
+
+        # Add a logo at the top
+        Image:
+            source: 'wee.JPG'
+            size_hint: 1, 0.3
+
+
+        # Display current weather and time
+        Label:
+            id: weather_label
+            text: "Weather: Loading..."
+            size_hint: 1, 0.2
+            font_size: '20sp'
+
+
+        Label:
+            id: time_label
+            text: "Time: Loading..."
+            size_hint: 1, 0.2
+            font_size: '20sp'
+
+
+        # Button to set alarm
+        Button:
+            text: "Set Alarm"
+            size_hint: 1, 0.2
+            font_size: '18sp'
+            on_press: app.go_to_alarm_screen()
+
+
+<AlarmScreen>:
+    name: "alarm"
+    BoxLayout:
+        orientation: 'vertical'
+
+
+        # Text input for alarm time
+        TextInput:
+            id: time_input
+            hint_text: 'Enter time in HH:MM format'
+            size_hint: 1, 0.2
+            font_size: '18sp'
+
+
+        # Text input for weather condition
+        TextInput:
+            id: weather_input
+            hint_text: 'Enter weather condition (e.g., Rain, Clear)'
+            size_hint: 1, 0.2
+            font_size: '18sp'
+
+
+        # Text input for city name
+        TextInput:
+            id: city_input
+            hint_text: 'Enter your city'
+            size_hint: 1, 0.2
+            font_size: '18sp'
+
+
+        # Button to set alarm
+        Button:
+            text: "Set Alarm"
+            size_hint: 1, 0.2
+            font_size: '18sp'
+            on_press: app.set_alarm()
+

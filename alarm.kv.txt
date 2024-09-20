@@ -1,0 +1,25 @@
+# alarm.kv
+
+ScreenManager:
+    MainScreen:
+    AlarmScreen:
+
+<MainScreen>:
+    name: "main"
+    BoxLayout:
+        orientation: 'vertical'
+        Label:
+            text: "Main Screen"
+        Button:
+            text: "Go to Alarm"
+            on_press: app.root.current = "alarm"
+
+<AlarmScreen>:
+    name: "alarm"
+    BoxLayout:
+        orientation: 'vertical'
+        Label:
+            text: "Alarm Screen"
+        Button:
+            text: "Back to Main"
+            on_press: app.root.current = "main"
