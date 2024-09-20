@@ -7,12 +7,11 @@ jobs:
     runs-on: ubuntu-20.04
 
     steps:
-      - uses: actions/checkout@v2
-      
-      # Fix: Ensure permissions are properly set
-      - name: Fix Permissions for .git/config
-        run: |
-          sudo chmod -R u+rwx .git/config
+      - uses: actions/checkout@v3
+
+      # Disable Git config locking mechanism
+      - name: Set Git Safe Directory
+        run: git config --global --add safe.directory /github/workspace
 
       - name: Get Date
         id: get-date
@@ -23,7 +22,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: .buildozer_global
-          key: buildozer-global-${{ hashFiles('buildozer.spec') }} 
+          key: buildozer-global-${{ hashFiles('buildozer.spec') }}
 
       - uses: actions/cache@v2
         with:
@@ -42,3 +41,4 @@ jobs:
         with:
           name: package
           path: ${{ steps.buildozer.outputs.filename }}
+
