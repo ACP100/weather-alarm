@@ -5,16 +5,18 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3  # Updated to v3
+      
       - name: Build APK
-        uses: digreatbrian/buildozer-action@v1
+        uses: digreatbrian/buildozer-action@v1  # Specify correct version
         with:
           buildozer-cmd: buildozer -v android debug
-          work-dir: . # directory where your main.py file rests
+          work-dir: .  # Directory where your main.py file is located
 
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v2
+      - name: Upload APK
+        uses: actions/upload-artifact@v3  # Updated to v3
         with:
           name: package
           path: ./bin/*.apk
