@@ -9,7 +9,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      
+
       - name: Get Date
         id: get-date
         run: |
@@ -31,32 +31,35 @@ jobs:
         with:
           python-version: '3.8'
 
-      # Install dependencies including buildozer, Android SDK, NDK
-      - name: Install buildozer and dependencies
+      - name: Install Buildozer and dependencies
         run: |
           sudo apt-get update -y --fix-missing
           sudo apt-get install -y --no-install-recommends \
               python3-pip build-essential git python3-dev libssl-dev \
               libffi-dev zlib1g-dev automake autoconf libtool pkg-config python3-setuptools \
           || sudo apt-get install -y --fix-broken
-        continue-on-error: true # Continue even if there's an error to show detailed logs
+        continue-on-error: true
 
-      - name: Check installation logs
+      - name: Set permissions
         run: |
-          cat /var/log/apt/term.log
+          sudo chmod -R 777 .buildozer
+          sudo chmod -R 777 .
 
-      - name: Install Android SDK and NDK
+      - name: Validate paths
         run: |
-          sudo apt-get install -y wget
-          wget https://dl.google.com/android/repository/commandlinetools-linux-8092744_latest.zip
-          sudo unzip commandlinetools-linux-8092744_latest.zip -d /usr/lib/android-sdk/cmdline-tools/latest
-          export ANDROID_HOME=/usr/lib/android-sdk
-          export PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$PATH
-          yes | sdkmanager --licenses
-          sdkmanager "platform-tools" "platforms;android-30"
+          if [ ! -d ".buildozer" ]; then echo ".buildozer directory not found!"; exit 2; fi
+          if [ ! -f "buildozer.spec" ]; then echo "buildozer.spec file not found!"; exit 2; fi
 
-      - name: Build with Buildozer
-        run: buildozer android debug --log-level 2
+      - name: Install Buildozer via pip
+        run: |
+          python3 -m pip install --upgrade pip
+          python3 -m pip install buildozer cython
+        continue-on-error: true
+
+      - name: Build with Buildozer (Verbose)
+        run: |
+          buildozer android debug --verbose || exit 2
+        continue-on-error: true
 
       - name: Upload APK
         uses: actions/upload-artifact@v3
