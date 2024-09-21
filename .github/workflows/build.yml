@@ -9,7 +9,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-
+      
       - name: Get Date
         id: get-date
         run: |
@@ -38,28 +38,23 @@ jobs:
               python3-pip build-essential git python3-dev libssl-dev \
               libffi-dev zlib1g-dev automake autoconf libtool pkg-config python3-setuptools \
           || sudo apt-get install -y --fix-broken
-        continue-on-error: true
-
-      - name: Set permissions
-        run: |
-          sudo chmod -R 777 .buildozer
-          sudo chmod -R 777 .
-
-      - name: Validate paths
-        run: |
-          if [ ! -d ".buildozer" ]; then echo ".buildozer directory not found!"; exit 2; fi
-          if [ ! -f "buildozer.spec" ]; then echo "buildozer.spec file not found!"; exit 2; fi
 
       - name: Install Buildozer via pip
         run: |
           python3 -m pip install --upgrade pip
           python3 -m pip install buildozer cython
-        continue-on-error: true
+
+      - name: Initialize Buildozer (to create .buildozer directory)
+        run: |
+          buildozer init || exit 2
+
+      - name: Set permissions on .buildozer directory (after initialization)
+        run: |
+          sudo chmod -R 777 .buildozer
 
       - name: Build with Buildozer (Verbose)
         run: |
           buildozer android debug --verbose || exit 2
-        continue-on-error: true
 
       - name: Upload APK
         uses: actions/upload-artifact@v3
