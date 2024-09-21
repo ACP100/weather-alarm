@@ -31,6 +31,24 @@ jobs:
         with:
           python-version: '3.8'
 
+      # Install dependencies including buildozer, Android SDK, NDK
+      - name: Install buildozer and dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y python3-pip build-essential git python3-dev libssl-dev \
+              libffi-dev zlib1g-dev automake autoconf libtool pkg-config python3-setuptools
+          pip install --upgrade pip
+          pip install buildozer cython
+        
+      - name: Install Android SDK and NDK
+        run: |
+          sudo apt install -y android-sdk ndk
+          sudo mkdir -p /usr/lib/android-sdk/cmdline-tools/latest/bin
+          export ANDROID_HOME=/usr/lib/android-sdk
+          export PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$PATH
+          yes | sdkmanager --licenses
+          sdkmanager "platform-tools" "platforms;android-30"
+
       - name: Build with Buildozer
         run: buildozer android debug --log-level 2
 
